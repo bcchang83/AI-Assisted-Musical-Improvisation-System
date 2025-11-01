@@ -1,4 +1,10 @@
 # AI-Assisted-Musical-Improvisation-System
+### Dataset
+
+The MAESTRO Dataset (v3)
+
+https://magenta.tensorflow.org/datasets/maestro#download
+
 
 ### Project Plan
 Phase 1 – Baseline: Supervised Music Continuation
