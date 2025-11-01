@@ -1,3 +1,4 @@
+# AI-Assisted-Musical-Improvisation-System
 
 ### Setup github
 …or create a new repository on the command line
