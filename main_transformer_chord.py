@@ -56,15 +56,17 @@ def midi_to_chord_events(midi_path, chord_merge_ms=0.03):
 # ===========================
 
 def events_to_vectors(events):
+    """Convert each chord event to 130D vector:
+       [128 pitch one-hot + delta_time + duration]"""
     vecs = []
     for pitches, delta, dur in events:
         v = np.zeros(130)
         for p in pitches:
             if 0 <= p < 128:
                 v[p] = 1.0
-                v[128] = delta
-                v[129] = dur
-                vecs.append(v)
+        v[128] = delta
+        v[129] = dur
+        vecs.append(v)
     return np.array(vecs, dtype=np.float32)
 
 # ===========================
@@ -125,6 +127,9 @@ inputs = Input(shape=(seq_len-1, input_dim))
 x = transformer_block(inputs)
 x = transformer_block(x)
 x = transformer_block(x)
+x = transformer_block(x)
+x = transformer_block(x)
+x = transformer_block(x)
 x = Flatten()(x)
 x = Dense(512, activation='relu')(x)
 x = Dropout(0.3)(x)
@@ -139,7 +144,7 @@ model.summary()
 
 # ===========================
 
-model.fit(X, y, epochs=10, batch_size=32)
+model.fit(X, y, epochs=20, batch_size=32)
 model.save("transformer_chord_event_model.h5")
 
 # ===========================
@@ -199,5 +204,16 @@ def chord_events_to_midi(events, out_path="generated_transformer.mid"):
 seed = X[0]
 generated_events = generate_chord_events(seed, length=128)
 chord_events_to_midi(generated_events, "transformer_generated.mid")
+def vectors_to_events(vectors, scaler):
+    events = []
+    for v in vectors:
+        pitches = np.where(v[:128] > 0.5)[0].tolist()
+        delta_norm, dur_norm = v[128], v[129]
+        delta, dur = scaler.inverse_transform([[delta_norm, dur_norm]])[0]
+        events.append([pitches, delta, dur])
+    return events
 
+# seed to event and reconstruct
+seed_events = vectors_to_events(seed, scaler)
+chord_events_to_midi(seed_events, "transformer_original.mid")
 print("✅ Done! Transformer chord event model trained successfully.")
