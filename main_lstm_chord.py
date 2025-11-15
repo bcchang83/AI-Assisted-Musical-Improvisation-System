@@ -106,6 +106,7 @@ model = Sequential([
     Dropout(0.3),
     LSTM(512),
     Dense(256, activation="relu"),
+    Dense(256, activation="relu"),
     Dense(130, activation="sigmoid")
 ])
 
@@ -115,7 +116,7 @@ model.summary()
 # ===========================
 # 5. Train
 # ===========================
-model.fit(X, y, epochs=10, batch_size=32)
+model.fit(X, y, epochs=30, batch_size=32)
 model.save("lstm_chord_event_model.h5")
 
 # ===========================
