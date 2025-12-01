@@ -108,6 +108,28 @@ model.summary()
 # 5. Train (only if run directly)
 # ===========================================
 if __name__ == "__main__":
+
+    import os
+    from tensorflow.keras.models import load_model
+
+    MODEL_PATH = "remi_transformer.h5"
+
+    # -----------------------------
+    # Load or Initialize model
+    # -----------------------------
+    if os.path.exists(MODEL_PATH):
+        print("🔁 Found existing model — loading for continued training...")
+        model = load_model(MODEL_PATH)
+    else:
+        print("🆕 No existing model — training from scratch...")
+
+    # -----------------------------
+    # Continue Training
+    # -----------------------------
     model.fit([X_tokens, X_types], Y, epochs=10, batch_size=32)
-    model.save("remi_transformer.h5")
-    print("Training complete!")
+
+    # -----------------------------
+    # Save updated model
+    # -----------------------------
+    model.save(MODEL_PATH)
+    print("💾 Training complete & model saved!")

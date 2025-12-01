@@ -1,3 +1,8 @@
 data/
 __pycache__/
 .DS_Store
+*mid
+*png
+*pdf
+*h5
+*pkl

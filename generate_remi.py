@@ -86,7 +86,7 @@ def improvise(seed_tokens_original, length=200, temperature=1.0):
 # -----------------------
 def midi_to_seed(midi_path, max_tokens=128):
     tokens = midi_to_remi(midi_path)
-    return tokens[:max_tokens]
+    return tokens[max_tokens:max_tokens*2]
 
 
 if __name__ == "__main__":
@@ -94,7 +94,9 @@ if __name__ == "__main__":
     seed = midi_to_seed("./data/maestro-v3.0.0/2013/ORIG-MIDI_01_7_7_13_Group__MID--AUDIO_12_R1_2013_wav--1.midi", max_tokens=128)
     print("Seed tokens loaded:", len(seed))
 
-    seq = improvise(seed, length=300)
-    remi_to_midi(seq, "jam_out.mid")
+    seq = improvise(seed, length=300, temperature=1.0)
+    print("Generated token length:",len(seq))
+    seq = seq[-300:]
+    remi_to_midi(seq, "remi_transformer_jam_out.mid")
 
     print("🎵 Done! Saved to jam_out.mid")
