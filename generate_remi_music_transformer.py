@@ -151,7 +151,7 @@ def improvise_from_midi(midi_path, keep=64, length=300):
     print("Using {} seed tokens".format(len(seed)))
 
     # --- 2. output only seed tokens as MIDI ---
-    remi_to_midi(seed, MODEL_PATH[:-3] + "_input_seed_2.mid")
+    remi_to_midi(seed, MODEL_PATH[:-3] + "_input_seed.mid")
     print("Saved seed-only MIDI to input_seed.mid")
 
     # --- 3. generate continuation ---
@@ -159,7 +159,7 @@ def improvise_from_midi(midi_path, keep=64, length=300):
     print("Generated token length:",len(seq))
     seq = seq[-length:]
     # --- 4. save model continuation ---
-    remi_to_midi(seq, MODEL_PATH[:-3] + "_jam_output_2.mid")
+    remi_to_midi(seq, MODEL_PATH[:-3] + "_jam_output.mid")
     print("Saved continuation to jam_output.mid")
 
     print("\n========================")
@@ -179,7 +179,7 @@ if __name__ == "__main__":
 
     # --- Option 2: jamming with your MIDI ---
     improvise_from_midi(
-        "./data/maestro-v3.0.0/2013/ORIG-MIDI_03_7_10_13_Group_MID--AUDIO_18_R3_2013_wav--3.midi",#"./data/maestro-v3.0.0/2013/ORIG-MIDI_01_7_7_13_Group__MID--AUDIO_12_R1_2013_wav--1.midi",
+        "./data/maestro-v3.0.0/2013/ORIG-MIDI_01_7_7_13_Group__MID--AUDIO_12_R1_2013_wav--1.midi",
         keep=128,
         length=300
     )
