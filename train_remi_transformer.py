@@ -8,9 +8,7 @@ from tensorflow.keras.layers import MultiHeadAttention, LayerNormalization, Drop
 from tensorflow.keras.models import Model
 from tensorflow.keras.optimizers import Adam
 
-# ==============================
-# 1. Load MIDI → REMI tokens
-# ==============================
+# 1. Load MIDI to REMI tokens
 midi_files = glob.glob("./data/maestro-v3.0.0/**/*.midi", recursive=True)
 
 all_tokens = []
@@ -23,9 +21,7 @@ for path in midi_files[:50]:
 
 print("Loaded tracks:", len(all_tokens))
 
-# ==============================
 # 2. Build vocabulary
-# ==============================
 vocab = {}
 for seq in all_tokens:
     for t in seq:
@@ -40,9 +36,7 @@ pickle.dump(rev_vocab, open("rev_vocab.pkl", "wb"))
 
 print("Vocab size:", VOCAB)
 
-# ==============================
 # 3. Build training dataset
-# ==============================
 SEQ_LEN = 128
 
 X_tokens = []
@@ -70,9 +64,7 @@ TYPE_VOCAB = 5
 D_MODEL = 128
 
 
-# ==============================
 # 4. Transformer model
-# ==============================
 def transformer_block(x):
     attn = MultiHeadAttention(num_heads=4, key_dim=D_MODEL)(x, x)
     x = Add()([x, attn])
@@ -104,32 +96,25 @@ model = Model([token_in, type_in], output)
 model.compile(loss="sparse_categorical_crossentropy", optimizer=Adam(1e-4))
 model.summary()
 
-# ===========================================
-# 5. Train (only if run directly)
-# ===========================================
+# 5. Train
 if __name__ == "__main__":
 
     import os
     from tensorflow.keras.models import load_model
 
     MODEL_PATH = "remi_transformer.h5"
-
-    # -----------------------------
     # Load or Initialize model
-    # -----------------------------
     if os.path.exists(MODEL_PATH):
         print("🔁 Found existing model — loading for continued training...")
         model = load_model(MODEL_PATH)
     else:
         print("🆕 No existing model — training from scratch...")
 
-    # -----------------------------
+
     # Continue Training
-    # -----------------------------
     model.fit([X_tokens, X_types], Y, epochs=10, batch_size=32)
 
-    # -----------------------------
+
     # Save updated model
-    # -----------------------------
     model.save(MODEL_PATH)
     print("💾 Training complete & model saved!")

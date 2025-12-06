@@ -5,9 +5,7 @@ import tensorflow as tf
 from tensorflow.keras.models import load_model
 from tokenizer_remi import remi_to_midi, midi_to_remi, get_token_type
 
-# --------------------------
 # Load model + vocab
-# --------------------------
 from train_remi_music_transformer import RelativeMultiHeadAttention
 
 custom_objects = {
@@ -25,9 +23,7 @@ VOCAB = len(vocab)
 
 print("Loaded vocab:", VOCAB)
 
-# --------------------------
 # Token legality constraints
-# --------------------------
 # token -> type-name ("Bar","Pos","Pitch","Dur","Vel")
 def get_type_name(tok):
     if tok == "Bar":
@@ -70,10 +66,7 @@ def filter_illegal(pred, last_tok_str):
     pred = pred / pred.sum()    # renormalize
     return pred
 
-
-# --------------------------
 # GENERATE continuation
-# --------------------------
 SEQ_LEN = 128
 
 def pad_to_seq(tokens, target_len=SEQ_LEN-1):
@@ -99,7 +92,7 @@ def generate(seed_tokens, max_length=400, temperature=1.0):
         pred = model.predict([x_tok, x_type], verbose=0)[0]
 
         # legality filter
-        last_tok_str = seed_tokens[-1]  # <<< 把最後 token 字串送進去
+        last_tok_str = seed_tokens[-1]
         pred = filter_illegal(pred, last_tok_str)
 
         # avoid negative / NaN
@@ -127,9 +120,7 @@ def generate(seed_tokens, max_length=400, temperature=1.0):
 
     return seed_tokens
 
-# --------------------------
 # OPTION 1 — Random generation (empty seed)
-# --------------------------
 def generate_from_scratch():
     seed = ["Bar", "Pos_0"]  # valid minimal REMI start
     seq = generate(seed, max_length=300)
@@ -137,9 +128,7 @@ def generate_from_scratch():
     print("Saved to generated_music.mid")
 
 
-# --------------------------
 # OPTION 2 — Improvise based on your MIDI file
-# --------------------------
 def improvise_from_midi(midi_path, keep=64, length=300):
     # --- 1. MIDI → REMI tokens ---
     seed = midi_to_remi(midi_path)
@@ -168,11 +157,6 @@ def improvise_from_midi(midi_path, keep=64, length=300):
     print(" - jam_output.mid")
     print("========================\n")
 
-
-
-# --------------------------
-# RUN
-# --------------------------
 if __name__ == "__main__":
     # --- Option 1: random ---
     # generate_from_scratch()

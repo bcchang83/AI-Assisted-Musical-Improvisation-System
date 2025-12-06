@@ -4,9 +4,7 @@ import pickle
 from tensorflow.keras.models import load_model
 from tokenizer_remi import midi_to_remi, remi_to_midi, get_token_type
 
-# -----------------------
 # Load model & vocab
-# -----------------------
 model = load_model("remi_transformer.h5")
 vocab = pickle.load(open("vocab.pkl", "rb"))
 rev_vocab = pickle.load(open("rev_vocab.pkl", "rb"))
@@ -81,9 +79,7 @@ def improvise(seed_tokens_original, length=200, temperature=1.0):
     return [rev_vocab[i] for i in ids]
 
 
-# -----------------------
 # MIDI → Seed → Generate
-# -----------------------
 def midi_to_seed(midi_path, max_tokens=128):
     tokens = midi_to_remi(midi_path)
     return tokens[max_tokens:max_tokens*2]

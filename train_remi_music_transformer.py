@@ -9,9 +9,7 @@ from tensorflow.keras.layers import Layer, Embedding, Dense, LayerNormalization,
 from tensorflow.keras.models import Model
 from tensorflow.keras.optimizers.legacy import Adam
 
-# ==============================
-# 1. Load MIDI → REMI tokens
-# ==============================
+# 1. Load MIDI to REMI tokens
 midi_files = glob.glob("./data/maestro-v3.0.0/**/*.midi", recursive=True)
 
 all_tokens = []
@@ -24,9 +22,7 @@ for path in midi_files[:1000]:#[:50]:
 
 print("Loaded tracks:", len(all_tokens))
 
-# ==============================
 # 2. Build vocabulary
-# ==============================
 vocab = {}
 for seq in all_tokens:
     for t in seq:
@@ -41,9 +37,7 @@ pickle.dump(rev_vocab, open("rev_vocab.pkl", "wb"))
 
 print("Vocab size:", VOCAB)
 
-# ==============================
 # 3. Build training dataset
-# ==============================
 SEQ_LEN = 128
 
 X_tokens = []
@@ -68,21 +62,23 @@ Y        = np.array(Y, dtype=np.int32)
 print("Dataset:", X_tokens.shape, Y.shape)
 
 TYPE_VOCAB = 5
+
+# Baseline setting
 # LAYER = 4
 # D_MODEL = 128
 # NUM_HEADS = 8
 # FF_DIM = 1024
+
+# Large Music transformer
 LAYER = 6
 D_MODEL = 256
 NUM_HEADS = 8
 FF_DIM = 2048
 MAX_LEN = SEQ_LEN
 
-# ==============================
 # 4. Transformer model
-# ==============================
 
-# ---- Relative positional embedding ----
+# Relative positional embedding
 class RelativePositionEmbedding(Layer):
     def __init__(self, max_len, dim):
         super().__init__()
@@ -105,7 +101,7 @@ class RelativePositionEmbedding(Layer):
         return tf.gather(self.emb, relative_pos)
 
 
-# ---- Multi-head with relative attention ----
+# Multi-head with relative attention
 class RelativeMultiHeadAttention(Layer):
     def __init__(self, d_model, num_heads):
         super().__init__()
@@ -152,7 +148,7 @@ class RelativeMultiHeadAttention(Layer):
         return self.out(out)
 
 
-# ---- Transformer block ----
+# Transformer block
 def music_transformer_block(x):
     attn = RelativeMultiHeadAttention(D_MODEL, NUM_HEADS)(x, x, x)
     x = Add()([x, attn])
@@ -186,9 +182,7 @@ model.compile(loss="sparse_categorical_crossentropy", optimizer = Adam(1e-4, cli
 
 model.summary()
 
-# ===========================================
 # 5. Train (only if run directly)
-# ===========================================
 if __name__ == "__main__":
 
     import os
@@ -198,22 +192,16 @@ if __name__ == "__main__":
     custom_objects = {
     "RelativeMultiHeadAttention": RelativeMultiHeadAttention,
 }
-    # -----------------------------
     # Load or Initialize model
-    # -----------------------------
     if os.path.exists(MODEL_PATH):
         print("🔁 Found existing model — loading for continued training...")
         model = load_model(MODEL_PATH, custom_objects=custom_objects)
     else:
         print("🆕 No existing model — training from scratch...")
 
-    # -----------------------------
     # Continue Training
-    # -----------------------------
     model.fit([X_tokens, X_types], Y, epochs=1, batch_size=32)
 
-    # -----------------------------
     # Save updated model
-    # -----------------------------
     model.save(MODEL_PATH)
     print("💾 Training complete & model saved!")
