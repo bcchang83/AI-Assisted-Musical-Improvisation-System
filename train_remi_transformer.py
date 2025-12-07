@@ -12,7 +12,7 @@ from tensorflow.keras.optimizers import Adam
 midi_files = glob.glob("./data/maestro-v3.0.0/**/*.midi", recursive=True)
 
 all_tokens = []
-for path in midi_files[:50]:
+for path in midi_files[:400]:
     try:
         toks = midi_to_remi(path)
         all_tokens.append(toks)
