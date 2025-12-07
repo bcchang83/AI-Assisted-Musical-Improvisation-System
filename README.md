@@ -22,3 +22,16 @@ https://magenta.tensorflow.org/datasets/maestro#download
 ### How to use it
 
 1. Train a model or download a trained model from (https://drive.google.com/drive/folders/1HcNuf_Zqzxw5N39t3DH04fDYseMxJe5G?usp=drive_link)
+   ```bash
+   python train_remi_music_transformer.py
+2. Generate music
+   ```bash
+   python generate_remi_music_transformer.py
+
+### Code Explaination
+1. train_remi_transformer.py : Train the vanilla Transformer with REMI tokens.
+2. train_remi_music_transformer.py : Train Music Transformer with REMI tokens.
+3. generate_remi_transformer.py : Generate music by the vanilla Transformer.
+4. generate_remi_music_transformer.py : Generate music by Music Transformer.
+5. tokenizer_remi.py : Preprocessing with REMI tokens.
+6. evaluation.py : Generate evaluation figures.
