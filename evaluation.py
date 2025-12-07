@@ -88,3 +88,4 @@ if __name__ == "__main__":
 
         print("Bar charts saved (plot_<metric>.png)")
 
+    plot_bar_charts()
