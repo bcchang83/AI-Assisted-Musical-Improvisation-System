@@ -35,3 +35,16 @@ https://magenta.tensorflow.org/datasets/maestro#download
 4. generate_remi_music_transformer.py : Generate music by Music Transformer.
 5. tokenizer_remi.py : Preprocessing with REMI tokens.
 6. evaluation.py : Generate evaluation figures.
+
+### Demo
+Those reults use the same input clip from "maestro-v3.0.0/2013/ORIG-MIDI_01_7_7_13_Group__MID--AUDIO_12_R1_2013_wav--1.midi".
+
+Input clip: https://drive.google.com/file/d/1rWBvJGfgKcF0FW6O09MHqpl24B6RCqz5/view?usp=drive_link
+
+Standard Transformer: https://drive.google.com/file/d/18LnvZIDIPDCwH-dUzmKW9wtT1ZEHQdVD/view?usp=drive_link
+
+Music Transformer: https://drive.google.com/file/d/1MtD0fK-WJnXYIJOMQQdPBV-CpbKMgTwe/view?usp=sharing
+
+Music Transformer (Large): https://drive.google.com/file/d/1x0IumGznesstCQ2Ekmjn_Upuma1tIhll/view?usp=drive_link
+
+Mixed input with Music Transformer (Large) output: https://drive.google.com/file/d/1TBuhbrToMwtXfhOK7wi6VuSW8S6ol2Lc/view?usp=drive_link
