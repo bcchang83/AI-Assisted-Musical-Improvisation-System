@@ -1,4 +1,5 @@
 # AI-Assisted-Musical-Improvisation-System
+This project introduces the AI-Assisted Musical Improvisation System (AIMIS), a symbolic call-and-response framework for music generation. Using the Maestro dataset and REMI preprocessing, we benchmarked a standard Transformer against the Music Transformer architecture. Our experiments demonstrate that the Music Transformer outperforms the baseline in rhythmic coherence and phrasing. Furthermore, scaling to a larger model capacity improves quantitative metrics such as pitch range and rhythm variance, indicating greater expressive potential in the generated music.
 ### Dataset
 
 The MAESTRO Dataset (v3)
